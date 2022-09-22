@@ -59,8 +59,6 @@ func zerologMessages(zerologEvent *zerolog.Event, messages []any) {
 	}
 
 	switch messages[0].(type) {
-	case interface{}:
-		msgs = append(msgs, fmt.Sprintf("%s", messages[0]))
 	case []interface{}:
 		for _, msg := range messages {
 			realMsgs, msgOK := msg.([]interface{})
@@ -71,6 +69,8 @@ func zerologMessages(zerologEvent *zerolog.Event, messages []any) {
 				msgs = append(msgs, fmt.Sprintf("%s", realMsgs[i]))
 			}
 		}
+	case interface{}:
+		msgs = append(msgs, fmt.Sprintf("%s", messages[0]))
 	}
 
 	zerologEvent.Msg(strings.Join(msgs, ", "))

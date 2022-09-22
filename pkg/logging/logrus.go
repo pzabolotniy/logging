@@ -20,9 +20,10 @@ type logWrapper struct {
 // see README.md https://github.com/sirupsen/logrus
 func GetLogrusLogger() Logger {
 	logger := logrus.New()
-	logger.SetFormatter(&logrus.TextFormatter{ //nolint:exhaustruct // set only modified fields
-		FullTimestamp: true,
-	})
+	logger.SetFormatter(
+		&logrus.TextFormatter{ //nolint:exhaustruct // set only modified fields
+			FullTimestamp: true,
+		})
 	logger.SetLevel(logrus.TraceLevel)
 	logger.SetOutput(os.Stdout)
 	logger.AddHook(hooks.GetFileLineHook())

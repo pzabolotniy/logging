@@ -583,16 +583,56 @@ linters-settings:
     # see https://github.com/mgechev/revive#available-rules for details.
     ignore-generated-header: true
     severity: warning
+    enable-all-rules: true
     rules:
-      - name: indent-error-flow
-        severity: warning
-      - name: add-constant
-        severity: warning
-        arguments:
-          - maxLitCount: "3"
-            allowStrs: '""'
-            allowInts: "0,1,2"
-            allowFloats: "0.0,0.,1.0,1.,2.0,2."
+       - name: add-constant
+         severity: warning
+         disabled: false
+         arguments:
+           - maxLitCount: "3"
+             allowStrs: '""'
+             allowInts: "0,1,2"
+             allowFloats: "0.0,0.,1.0,1.,2.0,2."
+       - name: line-length-limit
+         severity: warning
+         disabled: false
+         arguments: [90]
+       - name: cyclomatic
+         severity: warning
+         disabled: false
+         arguments: [10]
+       - name: cognitive-complexity
+         severity: warning
+         disabled: false
+         arguments: [7]
+       - name: file-header
+         severity: warning
+         disabled: true
+         arguments:
+           - This is the text that must appear at the top of source files.
+       - name: argument-limit
+         severity: warning
+         disabled: false
+         arguments: [4]
+       - name: banned-characters
+         severity: warning
+         disabled: true
+         arguments: []
+       - name: function-result-limit
+         severity: warning
+         disabled: false
+         arguments: [2]
+       - name: max-public-structs
+         severity: warning
+         disabled: false
+         arguments: [3]
+       - name: function-length
+         severity: warning
+         disabled: false
+         arguments: [40, 0]
+       - name: package-comments
+         severity: warning
+         disabled: true
 
   staticcheck:
     # Select the Go version to target. The default is '1.13'.

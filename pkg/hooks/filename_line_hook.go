@@ -17,6 +17,8 @@ const (
 	PathLen int = 2
 	// DefaultFileNameLineKey is a field name in a logged record.
 	DefaultFileNameLineKey string = "where"
+	// LogrusIterationDepth is a count attempts to find proper caller.
+	LogrusIterationDepth = 10
 )
 
 // GetFileLineHook prepares and returns filename line hook.
@@ -28,11 +30,13 @@ func GetFileLineHook() *FileLineHook {
 
 // FileLineHook contains caller's log settings.
 type FileLineHook struct {
-	LogKeyName string `json:"field_name" yaml:"field_name"` //nolint:tagliatelle,lll // temporary disabled. need to reconcile json/yaml field and struct's field
+	//nolint:tagliatelle // temporary disabled.
+	// need to reconcile json/yaml field and struct's field
+	LogKeyName string `json:"field_name" yaml:"field_name"`
 }
 
 // Levels implements logrus's Hook interface.
-func (hook *FileLineHook) Levels() []log.Level {
+func (*FileLineHook) Levels() []log.Level {
 	return log.AllLevels
 }
 
@@ -42,7 +46,7 @@ func (hook *FileLineHook) Fire(entry *log.Entry) error {
 		file string
 		line int
 	)
-	for i := 0; i < 10; i++ { //nolint:revive // allow magic number
+	for i := 0; i < LogrusIterationDepth; i++ {
 		file, line = getCaller(StartDepth + i)
 		if !strings.HasPrefix(file, "logrus") {
 			break

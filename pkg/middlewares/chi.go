@@ -6,6 +6,7 @@ import (
 	"github.com/pzabolotniy/logging/pkg/logging"
 )
 
+// WithLogger is a chi-router middleware to inject logger into the context.
 func WithLogger(logger logging.Logger) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

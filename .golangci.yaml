@@ -604,7 +604,7 @@ linters-settings:
        - name: cognitive-complexity
          severity: warning
          disabled: false
-         arguments: [7]
+         arguments: [10]
        - name: file-header
          severity: warning
          disabled: true

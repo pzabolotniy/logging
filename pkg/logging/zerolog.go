@@ -52,23 +52,27 @@ func (l *ZerologWrapper) Fatal(messages ...any) {
 }
 
 func zerologMessages(zerologEvent *zerolog.Event, messages []any) {
+	msgs := make([]string, 0)
+
 	if len(messages) != 1 {
 		return
 	}
-	realMessages, ok := messages[0].([]interface{})
-	if !ok {
-		return
-	}
-	msgs := make([]string, 0, len(realMessages))
-	for _, msg := range messages {
-		realMsgs, msgOK := msg.([]interface{})
-		if !msgOK {
-			continue
+
+	switch messages[0].(type) {
+	case []interface{}:
+		for _, msg := range messages {
+			realMsgs, msgOK := msg.([]interface{})
+			if !msgOK {
+				continue
+			}
+			for i := range realMsgs {
+				msgs = append(msgs, fmt.Sprintf("%s", realMsgs[i]))
+			}
 		}
-		for i := range realMsgs {
-			msgs = append(msgs, fmt.Sprintf("%s", realMsgs[i]))
-		}
+	case interface{}:
+		msgs = append(msgs, fmt.Sprintf("%s", messages[0]))
 	}
+
 	zerologEvent.Msg(strings.Join(msgs, ", "))
 }
 

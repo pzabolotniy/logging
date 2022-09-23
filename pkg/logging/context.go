@@ -2,20 +2,28 @@ package logging
 
 import "context"
 
-type logCtx struct{}
+type logFieldsCtx struct{}
 
-// WithContext puts logger to the context.
-func WithContext(ctx context.Context, logger Logger) context.Context {
-	return context.WithValue(ctx, logCtx{}, logger)
+func WithContext(ctx context.Context, fields Fields) context.Context {
+	return context.WithValue(ctx, logFieldsCtx{}, fields)
 }
 
-// FromContext extracts Logger from context and returns itself
-// otherwise, creates default one logger.
-func FromContext(ctx context.Context) Logger {
-	logger, ok := ctx.Value(logCtx{}).(Logger)
-	if !ok {
-		return GetLogger()
+func ReplaceFieldsInContext(ctx context.Context, newFields Fields) context.Context {
+	currentFields := FieldsFromContext(ctx)
+	for k, v := range newFields {
+		currentFields[k] = v
 	}
+	return WithContext(ctx, currentFields)
+}
 
-	return logger
+func FieldsFromContext(ctx context.Context) Fields {
+	fields, ok := ctx.Value(logFieldsCtx{}).(Fields)
+	if !ok {
+		return make(Fields, 0)
+	}
+	return fields
+}
+
+func FromContext(ctx context.Context, logger Logger) Logger {
+	return logger.WithFields(FieldsFromContext(ctx))
 }
